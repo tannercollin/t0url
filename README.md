@@ -6,15 +6,15 @@
 
 ## Description
 
-Command line pastebin.
+Command line URL shortener.
 
-This allows you to upload text notes from your command line or browser. A URL to the note is returned.
+This allows you to submit URLs from your command line or browser. A short URL is returned.
 
 ## Usage
 
 `<command> | curl -F 'url=<-' https://url.t0.vc`
 
-You can also upload from the web at [url.t0.vc](https://url.t0.vc).
+You can also submit from the web at [url.t0.vc](https://url.t0.vc).
 
 ## Example
 
