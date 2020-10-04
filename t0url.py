@@ -7,6 +7,7 @@ import string
 import validators
 
 from flask import abort, Flask, request, redirect
+from werkzeug.exceptions import HTTPException
 
 DB = 'data/t0url'
 PORT = 5004
@@ -72,19 +73,21 @@ def new():
 
             url = request.form['url'].strip()
 
-            if not url: raise
-            if DOMAIN in url: raise
+            if not url: abort(400, 'Error: URL missing')
+            if DOMAIN in url: abort(400, 'Error: use a different URL')
             if not url.startswith('http'):
                 url = 'http://' + url
-            if not validators.url(url): raise
+            if not validators.url(url): abort(400, 'Error: invalid URL')
 
             db[nid] = url
 
             print('Adding url {}:\n{}'.format(nid, url))
 
         return '{}/{}'.format(URL, nid) + '\n'
+    except HTTPException:
+        raise
     except:
-        abort(400)
+        abort(400, 'Error: unknown problem')
 
 @flask_app.route('/<nid>', methods=['GET'])
 def get(nid):
