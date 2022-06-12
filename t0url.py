@@ -19,7 +19,9 @@ def help():
     form = (
         '<form action="{0}" method="POST" accept-charset="UTF-8">'
 	'<input name="web" type="hidden" value="true">'
-        '<input name="{1}">'
+        '<input name="name" style="border: none;">'
+        '<br>URL: <input name="{1}">'
+        '<br>CAPTCHA: Who owns this site? <input name="captcha">'
         '<br><button type="submit">Submit</button></form>'.format(URL, POST)
     )
     return """
@@ -51,7 +53,6 @@ SOURCE CODE
 
 SEE ALSO
     https://txt.t0.vc
-    https://pic.t0.vc
 </pre>""".format(POST, URL, form)
 
 def new_id():
@@ -66,6 +67,20 @@ def index():
 @flask_app.route('/', methods=['POST'])
 def new():
     try:
+        is_web = 'web' in request.form
+
+        name = request.form.get('name', None)
+        if name:
+            # TODO: fail if name field is filled out
+            print('Name filled out:', name)
+
+        captcha = request.form.get('captcha', None)
+        if is_web and 'tanner' not in captcha.lower() and 'collin' not in captcha.lower():
+            print('Captcha failed:', captcha)
+            return redirect('https://txt.t0.vc/LPPZ')
+        else:
+            print('Captcha passed:', captcha)
+
         with shelve.open(DB) as db:
             nid = new_id()
             while nid in db:
